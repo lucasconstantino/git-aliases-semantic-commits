@@ -1,5 +1,7 @@
 # Git Semantic Commits Aliases
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/lucasconstantino/git-semantic-commits-aliases.svg)](https://greenkeeper.io/)
+
 :warning: not usable yet
 
 > Git semantic commit local aliases installer, based on [semantic commit messages](https://seesparkbox.com/foundry/semantic_commit_messages) article.
