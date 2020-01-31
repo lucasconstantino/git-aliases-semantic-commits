@@ -1,0 +1,9 @@
+{
+  "name": "git-semantic-commits-aliases",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": "git@github.com:lucasconstantino/git-semantic-commits-aliases.git",
+  "author": "Lucas Constantino Silva <lucasconstantinosilva@gmail.com>",
+  "license": "MIT",
+  "private": false
+}
