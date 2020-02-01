@@ -1,6 +1,6 @@
 # Git Semantic Commits Aliases
 
-:warning: not usable yet
+:warning: not well tested, but should cause no big issue :)
 
 > Git semantic commit local aliases installer, based on [semantic commit messages](https://seesparkbox.com/foundry/semantic_commit_messages) article.
 
