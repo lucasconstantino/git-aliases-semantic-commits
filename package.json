@@ -1,11 +1,11 @@
 {
   "name": "git-semantic-commits-aliases",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "git@github.com:lucasconstantino/git-semantic-commits-aliases.git",
   "repository": "git@github.com:lucasconstantino/git-semantic-commits-aliases.git",
   "license": "MIT",
   "author": "Lucas Constantino Silva <lucasconstantinosilva@gmail.com>",
   "dependencies": {
-    "git-shared-aliases": "^0.1.1"
+    "git-shared-aliases": "^0.2.1"
   }
 }
