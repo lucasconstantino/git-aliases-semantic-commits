@@ -1,4 +1,4 @@
-# Git Semantic Commits Aliases
+# Git Semantic Commit Aliases
 
 :warning: not well tested, but should cause no big issue :)
 
