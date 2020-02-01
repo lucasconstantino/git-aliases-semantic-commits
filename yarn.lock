@@ -33,15 +33,16 @@ fs.realpath@^1.0.0:
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
   integrity sha1-FQStJSMVjKpA20onh8sBQRmU6k8=
 
-git-shared-aliases@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/git-shared-aliases/-/git-shared-aliases-0.1.1.tgz#a40886249c0384de2779855d58463b8f648363ce"
-  integrity sha512-k993+V1qPaMBx/lnxRfRvxZrApYCUnuZAZvESHC/DL/fV9o/ELlzSSzEBILiIxQfPXT+H3wNVOjpzOu1Uth3hA==
+git-shared-aliases@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/git-shared-aliases/-/git-shared-aliases-0.2.1.tgz#2b7093793fb957fd3f7d52cdbe662a169f2ca0c5"
+  integrity sha512-Oz/SQL6pwmw3LyYbXxwqz/W6O//yJ+DwdbElyWW3g7lYP1hYyOLvEUCtf8HdPMsIxpPMfwedIJK66L8rQgFZpQ==
   dependencies:
+    glob "^7.1.6"
     pkg-dir "^4.2.0"
     shelljs "^0.8.3"
 
-glob@^7.0.0:
+glob@^7.0.0, glob@^7.1.6:
   version "7.1.6"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.6.tgz#141f33b81a7c2492e125594307480c46679278a6"
   integrity sha512-LwaxwyZ72Lk7vZINtNNrywX0ZuLyStrdDtabefZKAY5ZGJhVtgdznluResxNmPitE0SAO+O26sWTHeKSI2wMBA==
