@@ -1,12 +1,10 @@
-const { readFileSync } = require("fs");
+const { readFileSync, writeFileSync } = require("fs");
 const { dirSync, setGracefulCleanup } = require("tmp");
 const { exec } = require("shelljs");
-// const package = require("./examples/package.json");
 
 setGracefulCleanup();
 
 const options = { cwd: __dirname, fatal: true, silent: true };
-// const directPackageStr = JSON.stringify(directPackage, null, 2);
 
 let result;
 let tmp;
@@ -24,6 +22,7 @@ beforeEach(() => {
   // just in case...
   exec(`rm -Rf ./examples/simple/node_modules`, options);
   exec(`rm -Rf ./examples/monorepo/node_modules`, options);
+  exec("yarn cache clean git-aliases-semantic-commits");
 
   exec(`cp -Rf ./examples/simple/ ${simple}`, options);
   exec(`cp -Rf ./examples/monorepo/ ${monorepo}`, options);
@@ -40,8 +39,9 @@ const install = example => {
 };
 
 describe("simple", () => {
+  beforeEach(() => install(simple));
+
   it("should install git aliases", () => {
-    install(simple);
     expect(result.code).toBe(0);
 
     // check config setup
@@ -52,21 +52,36 @@ describe("simple", () => {
     );
   });
 
-  it("should have git aliases available", () => {
-    install(simple);
+  it("should be possible to use 'chore' alias", () => {
+    const execOptions = { ...options, cwd: simple };
 
-    result = exec("git add .; git chore 'initial'", {
-      ...options,
-      cwd: simple
-    });
+    result = exec("git add .; git chore 'initial'", execOptions);
     expect(result.code).toBe(0);
 
-    result = exec("git --no-pager log -1 --pretty=%B", {
-      ...options,
-      cwd: simple
-    });
-
+    result = exec("git --no-pager log -1 --pretty=%B", execOptions);
     expect(result.code).toBe(0);
     expect(result.stdout).toContain("chore: initial");
+  });
+
+  it("should be possible to use 'feat' alias", () => {
+    const execOptions = { ...options, cwd: simple };
+
+    result = exec("git add .; git feat 'initial'", execOptions);
+    expect(result.code).toBe(0);
+
+    result = exec("git --no-pager log -1 --pretty=%B", execOptions);
+    expect(result.code).toBe(0);
+    expect(result.stdout).toContain("feat: initial");
+  });
+
+  it("should be possible to use namespacing", () => {
+    const execOptions = { ...options, cwd: simple };
+
+    result = exec("git add .; git chore -s namespace 'initial'", execOptions);
+    expect(result.code).toBe(0);
+
+    result = exec("git --no-pager log -1 --pretty=%B", execOptions);
+    expect(result.code).toBe(0);
+    expect(result.stdout).toContain("chore(namespace): initial");
   });
 });
