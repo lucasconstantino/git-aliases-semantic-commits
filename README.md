@@ -7,7 +7,7 @@
 ## Install
 
 ```sh
-npm install git-semantic-commit-aliases --save-dev
+npm install git-aliases-semantic-commits --save-dev
 ```
 
 Use the new aliases:
