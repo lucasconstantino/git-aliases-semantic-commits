@@ -4,7 +4,7 @@ const { exec } = require("shelljs");
 
 setGracefulCleanup();
 
-const options = { cwd: __dirname, fatal: true, silent: true };
+const options = { cwd: __dirname, fatal: true, silent: false };
 
 let result;
 let tmp;
@@ -83,5 +83,59 @@ describe("simple", () => {
     result = exec("git --no-pager log -1 --pretty=%B", execOptions);
     expect(result.code).toBe(0);
     expect(result.stdout).toContain("chore(namespace): initial");
+  });
+});
+
+describe("monorepo", () => {
+  const setNamespaceStrategy = namespace => {
+    const packageJson = require(`${monorepo}/package.json`);
+    packageJson.semanticCommits = { namespace: namespace };
+
+    writeFileSync(
+      `${monorepo}/package.json`,
+      JSON.stringify(packageJson, null, 2)
+    );
+  };
+
+  beforeEach(() => install(monorepo));
+
+  describe("namespace strategy: package.json", () => {
+    beforeEach(() => setNamespaceStrategy("package.json"));
+
+    it("should add non-namespaced messages commit when files outside namespaces", () => {
+      const execOptions = { ...options, cwd: monorepo };
+
+      result = exec("git add package.json; git chore 'initial'", execOptions);
+      expect(result.code).toBe(0);
+
+      result = exec("git --no-pager log -1 --pretty=%B", execOptions);
+      expect(result.code).toBe(0);
+      expect(result.stdout).toContain("chore: initial");
+    });
+
+    it("should add namespaced messages commit when files inside namespaces", () => {
+      const execOptions = { ...options, cwd: monorepo };
+
+      result = exec(
+        "git add ./package-json/first; git chore 'initial'",
+        execOptions
+      );
+      expect(result.code).toBe(0);
+
+      result = exec("git --no-pager log -1 --pretty=%B", execOptions);
+      expect(result.code).toBe(0);
+      expect(result.stdout).toContain("chore(first): initial");
+    });
+
+    it("should add multiple namespaces when changing files are in multiple places", () => {
+      const execOptions = { ...options, cwd: monorepo };
+
+      result = exec("git add . ; git chore 'initial'", execOptions);
+      expect(result.code).toBe(0);
+
+      result = exec("git --no-pager log -1 --pretty=%B", execOptions);
+      expect(result.code).toBe(0);
+      expect(result.stdout).toContain("chore(@root, first): initial");
+    });
   });
 });
