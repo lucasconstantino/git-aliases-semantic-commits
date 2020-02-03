@@ -1,4 +1,4 @@
-const { readFileSync, writeFileSync } = require("fs");
+const { readFileSync } = require("fs");
 const { dirSync, setGracefulCleanup } = require("tmp");
 const { exec } = require("shelljs");
 // const package = require("./examples/package.json");
@@ -8,36 +8,44 @@ setGracefulCleanup();
 const options = { cwd: __dirname, fatal: true, silent: true };
 // const directPackageStr = JSON.stringify(directPackage, null, 2);
 
-// let result;
+let result;
 let tmp;
 let dir;
+let simple;
+let monorepo;
 
 beforeEach(() => {
   result = undefined;
   tmp = dirSync();
-  dir = `${tmp.name}/`;
+  dir = `${tmp.name}`;
+  simple = `${dir}/simple`;
+  monorepo = `${dir}/monorepo`;
 
   // just in case...
-  exec(`rm -Rf ./example/node_modules`, options);
+  exec(`rm -Rf ./examples/simple/node_modules`, options);
+  exec(`rm -Rf ./examples/monorepo/node_modules`, options);
 
-  exec(`cp -Rf ./example/ ${dir}`, options);
-  exec(`cd ${dir}; git init`, options);
+  exec(`cp -Rf ./examples/simple/ ${simple}`, options);
+  exec(`cp -Rf ./examples/monorepo/ ${monorepo}`, options);
+
+  exec(`cd ${simple}; git init`, options);
+  exec(`cd ${monorepo}; git init`, options);
 });
 
-describe("yarn", () => {
-  const install = () => {
-    result = exec(
-      `cd ${dir}; INIT_CWD=${dir} yarn add --dev ${__dirname}`,
-      options
-    );
-  };
+const install = example => {
+  result = exec(
+    `cd ${example}; INIT_CWD=${example} yarn add --dev ${__dirname}`,
+    options
+  );
+};
 
+describe("simple", () => {
   it("should install git aliases", () => {
-    install();
+    install(simple);
     expect(result.code).toBe(0);
 
     // check config setup
-    const config = readFileSync(`${dir}/.git/config`).toString();
+    const config = readFileSync(`${simple}/.git/config`).toString();
     expect(config).toContain("[alias]");
     expect(config).toContain(
       "chore = !node_modules/git-aliases-semantic-commits/git-aliases/chore"
@@ -45,14 +53,17 @@ describe("yarn", () => {
   });
 
   it("should have git aliases available", () => {
-    install();
+    install(simple);
 
-    result = exec("git add .; git chore 'initial'", { ...options, cwd: dir });
+    result = exec("git add .; git chore 'initial'", {
+      ...options,
+      cwd: simple
+    });
     expect(result.code).toBe(0);
 
     result = exec("git --no-pager log -1 --pretty=%B", {
       ...options,
-      cwd: dir
+      cwd: simple
     });
 
     expect(result.code).toBe(0);
