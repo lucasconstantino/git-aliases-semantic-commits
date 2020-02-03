@@ -1,0 +1,9 @@
+{
+  "name": "git-aliases-semantic-commits--example",
+  "version": "1.0.0",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "git-aliases-semantic-commits": "../"
+  }
+}
