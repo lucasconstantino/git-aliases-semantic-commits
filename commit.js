@@ -1,22 +1,22 @@
 const { execFileSync } = require("child_process");
-const { resolveNamespace } = require("./utils");
+const { resolveScope } = require("./utils");
 const [_node, _curr, type, ...args] = process.argv;
 
-const namespace = resolveNamespace(args);
+const scope = resolveScope(args);
 const messages = args.slice(args[0] === "-s" ? 2 : 0);
 const params = ["commit", "-m"];
 
-if (!messages.length && namespace) {
-  // open edit mode with namespace
-  params.push(`${type}(${namespace}): `, "-e");
-} else if (!messages.length && !namespace) {
-  // open edit mode without namespace
+if (!messages.length && scope) {
+  // open edit mode with scope
+  params.push(`${type}(${scope}): `, "-e");
+} else if (!messages.length && !scope) {
+  // open edit mode without scope
   params.push(`${type}: `, "-e");
-} else if (namespace) {
-  // commit with namespace
-  params.push(`${type}(${namespace}): ${messages.join("\n\n")}`);
+} else if (scope) {
+  // commit with scope
+  params.push(`${type}(${scope}): ${messages.join("\n\n")}`);
 } else {
-  // commit without namespace
+  // commit without scope
   params.push(`${type}: ${messages.join("\n\n")}`);
 }
 

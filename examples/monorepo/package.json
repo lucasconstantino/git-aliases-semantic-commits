@@ -4,6 +4,6 @@
   "license": "MIT",
   "private": true,
   "semanticCommits": {
-    "namespace": "package.json"
+    "scope": "package.json"
   }
 }

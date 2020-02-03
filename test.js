@@ -4,7 +4,7 @@ const { exec } = require("shelljs");
 
 setGracefulCleanup();
 
-const options = { cwd: __dirname, fatal: true, silent: false };
+const options = { cwd: __dirname, fatal: true, silent: true };
 
 let result;
 let tmp;
@@ -77,19 +77,19 @@ describe("simple", () => {
   it("should be possible to use namespacing", () => {
     const execOptions = { ...options, cwd: simple };
 
-    result = exec("git add .; git chore -s namespace 'initial'", execOptions);
+    result = exec("git add .; git chore -s scope 'initial'", execOptions);
     expect(result.code).toBe(0);
 
     result = exec("git --no-pager log -1 --pretty=%B", execOptions);
     expect(result.code).toBe(0);
-    expect(result.stdout).toContain("chore(namespace): initial");
+    expect(result.stdout).toContain("chore(scope): initial");
   });
 });
 
 describe("monorepo", () => {
-  const setNamespaceStrategy = namespace => {
+  const setScopeStrategy = scope => {
     const packageJson = require(`${monorepo}/package.json`);
-    packageJson.semanticCommits = { namespace: namespace };
+    packageJson.semanticCommits = { scope: scope };
 
     writeFileSync(
       `${monorepo}/package.json`,
@@ -99,10 +99,10 @@ describe("monorepo", () => {
 
   beforeEach(() => install(monorepo));
 
-  describe("namespace strategy: package.json", () => {
-    beforeEach(() => setNamespaceStrategy("package.json"));
+  describe("scope strategy: package.json", () => {
+    beforeEach(() => setScopeStrategy("package.json"));
 
-    it("should add non-namespaced messages commit when files outside namespaces", () => {
+    it("should add non-scoped messages commit when files outside scopes", () => {
       const execOptions = { ...options, cwd: monorepo };
 
       result = exec("git add package.json; git chore 'initial'", execOptions);
@@ -113,7 +113,7 @@ describe("monorepo", () => {
       expect(result.stdout).toContain("chore: initial");
     });
 
-    it("should add namespaced messages commit when files inside namespaces", () => {
+    it("should add scoped messages commit when files inside scopes", () => {
       const execOptions = { ...options, cwd: monorepo };
 
       result = exec(
@@ -127,7 +127,7 @@ describe("monorepo", () => {
       expect(result.stdout).toContain("chore(first): initial");
     });
 
-    it("should add multiple namespaces when changing files are in multiple places", () => {
+    it("should add multiple scopes when changing files are in multiple places", () => {
       const execOptions = { ...options, cwd: monorepo };
 
       result = exec("git add . ; git chore 'initial'", execOptions);
