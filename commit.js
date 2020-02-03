@@ -1,9 +1,9 @@
 const { execFileSync } = require("child_process");
+const { resolveNamespace } = require("./utils");
 const [_node, _curr, type, ...args] = process.argv;
 
-let namespace = args[0] === "-s" ? args[1] : null;
-let messages = args.slice(namespace ? 2 : 0);
-
+const namespace = resolveNamespace(args);
+const messages = args.slice(args[0] === "-s" ? 2 : 0);
 const params = ["commit", "-m"];
 
 if (!messages.length && namespace) {
