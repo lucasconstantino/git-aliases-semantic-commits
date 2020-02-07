@@ -14,10 +14,10 @@ if (!messages.length && scope) {
   params.push(`${type}: `, "-e");
 } else if (scope) {
   // commit with scope
-  params.push(`${type}(${scope}): ${messages.join("\n\n")}`);
+  params.push(`${type}(${scope}): ${messages.join(" ")}`);
 } else {
   // commit without scope
-  params.push(`${type}: ${messages.join("\n\n")}`);
+  params.push(`${type}: ${messages.join(" ")}`);
 }
 
 execFileSync("git", params, { stdio: "inherit" });

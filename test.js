@@ -55,34 +55,37 @@ describe("simple", () => {
   it("should be possible to use 'chore' alias", () => {
     const execOptions = { ...options, cwd: simple };
 
-    result = exec("git add .; git chore 'initial'", execOptions);
+    result = exec('git add .; git chore "initial commit"', execOptions);
     expect(result.code).toBe(0);
 
     result = exec("git --no-pager log -1 --pretty=%B", execOptions);
     expect(result.code).toBe(0);
-    expect(result.stdout).toContain("chore: initial");
+    expect(result.stdout).toContain("chore: initial commit");
   });
 
   it("should be possible to use 'feat' alias", () => {
     const execOptions = { ...options, cwd: simple };
 
-    result = exec("git add .; git feat 'initial'", execOptions);
+    result = exec("git add .; git feat 'initial commit'", execOptions);
     expect(result.code).toBe(0);
 
     result = exec("git --no-pager log -1 --pretty=%B", execOptions);
     expect(result.code).toBe(0);
-    expect(result.stdout).toContain("feat: initial");
+    expect(result.stdout).toContain("feat: initial commit");
   });
 
   it("should be possible to use namespacing", () => {
     const execOptions = { ...options, cwd: simple };
 
-    result = exec("git add .; git chore -s scope 'initial'", execOptions);
+    result = exec(
+      "git add .; git chore -s scope 'initial commit'",
+      execOptions
+    );
     expect(result.code).toBe(0);
 
     result = exec("git --no-pager log -1 --pretty=%B", execOptions);
     expect(result.code).toBe(0);
-    expect(result.stdout).toContain("chore(scope): initial");
+    expect(result.stdout).toContain("chore(scope): initial commit");
   });
 });
 
@@ -105,37 +108,40 @@ describe("monorepo", () => {
     it("should add non-scoped messages commit when files outside scopes", () => {
       const execOptions = { ...options, cwd: monorepo };
 
-      result = exec("git add package.json; git chore 'initial'", execOptions);
-      expect(result.code).toBe(0);
-
-      result = exec("git --no-pager log -1 --pretty=%B", execOptions);
-      expect(result.code).toBe(0);
-      expect(result.stdout).toContain("chore: initial");
-    });
-
-    it("should add scoped messages commit when files inside scopes", () => {
-      const execOptions = { ...options, cwd: monorepo };
-
       result = exec(
-        "git add ./package-json/first; git chore 'initial'",
+        "git add package.json; git chore 'initial commit'",
         execOptions
       );
       expect(result.code).toBe(0);
 
       result = exec("git --no-pager log -1 --pretty=%B", execOptions);
       expect(result.code).toBe(0);
-      expect(result.stdout).toContain("chore(first): initial");
+      expect(result.stdout).toContain("chore: initial commit");
+    });
+
+    it("should add scoped messages commit when files inside scopes", () => {
+      const execOptions = { ...options, cwd: monorepo };
+
+      result = exec(
+        "git add ./package-json/first; git chore 'initial commit'",
+        execOptions
+      );
+      expect(result.code).toBe(0);
+
+      result = exec("git --no-pager log -1 --pretty=%B", execOptions);
+      expect(result.code).toBe(0);
+      expect(result.stdout).toContain("chore(first): initial commit");
     });
 
     it("should add multiple scopes when changing files are in multiple places", () => {
       const execOptions = { ...options, cwd: monorepo };
 
-      result = exec("git add . ; git chore 'initial'", execOptions);
+      result = exec("git add . ; git chore 'initial commit'", execOptions);
       expect(result.code).toBe(0);
 
       result = exec("git --no-pager log -1 --pretty=%B", execOptions);
       expect(result.code).toBe(0);
-      expect(result.stdout).toContain("chore(@root, first): initial");
+      expect(result.stdout).toContain("chore(@root, first): initial commit");
     });
   });
 });
